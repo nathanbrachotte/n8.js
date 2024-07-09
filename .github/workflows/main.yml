@@ -9,13 +9,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+
+      - uses: actions/cache@v3
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-
+
       - uses: pnpm/action-setup@v2
         with:
-          version: 7
+          version: 7.30.0
+
       - uses: actions/setup-node@v3
         with:
-          node-version: 16.x
+          node-version: "lts/*"
           cache: "pnpm"
 
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm run lint && pnpm run build
+      - run: pnpm install --frozen-lockfile --reporter=append-only
+      - run: pnpm run lint --loglevel=debug && pnpm run build --loglevel=debug
