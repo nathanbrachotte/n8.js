@@ -94,7 +94,7 @@ export const getAllCookies = (): Record<string, string> | null => {
 };
 
 export const getCookie = (key: string): string | null => {
-  return getCookies()?.[key] ?? null;
+  return getAllCookies()?.[key] ?? null;
 };
 
 /**
